@@ -1,5 +1,6 @@
 package com.javatechie.jwt.api.controller;
 
+import com.javatechie.jwt.api.model.Token;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -27,14 +28,14 @@ public class WelcomeController {
 	}
 	
 	@PostMapping("/authenticate")
-	public String generateToken(@RequestBody AuthRequest authRequest) throws Exception {
+	public Token generateToken(@RequestBody AuthRequest authRequest) throws Exception {
 		try {
 			authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(authRequest.getUsername(), 
 					authRequest.getPassword()));
 		} catch (Exception e) {
 			throw new Exception("Invalid username/password");
 		}
-		
-		return jwtUtil.generateToken(authRequest.getUsername());
+		return new Token(jwtUtil.generateToken(authRequest.getUsername()));
+
 	}
 }
